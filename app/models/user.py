@@ -1,6 +1,5 @@
 from sqlmodel import SQLModel, Field
 from typing import Optional
-from datetime import datetime, timedelta
 
 
 class User(SQLModel, table=True):
