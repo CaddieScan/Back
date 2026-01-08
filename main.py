@@ -22,17 +22,10 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(lifespan=lifespan)
 
-# Configuration CORS
-origins = [
-    "http://localhost:3000",
-    "http://127.0.0.1:3000",
-    "http://13.39.13.72",
-    "http://g3.finder-me.fr"
-]
-
+# Configuration CORS - Autoriser tous les domaines
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
