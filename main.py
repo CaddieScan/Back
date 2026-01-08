@@ -1,19 +1,14 @@
 from fastapi import FastAPI
 from contextlib import asynccontextmanager
 from fastapi.middleware.cors import CORSMiddleware
-from database import create_db_and_tables, get_session
-from route.users import router as users_router
-
-
-from sqlmodel import Session, select
-
+from app.database import create_db_and_tables
+from app.routes.users import router as users_router
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     # --- STARTUP ---
     create_db_and_tables()
-    session: Session = next(get_session())
   
     yield  # l'app tourne ici
 

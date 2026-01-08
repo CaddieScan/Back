@@ -1,8 +1,8 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlmodel import Session, select
-from model import User
-from schema import CreateUser
-from database import get_session
+from app.models.user import User
+from app.schemas.user import CreateUser
+from app.database.connection import get_session
 from typing import List, Optional
 
 router = APIRouter()
@@ -11,7 +11,11 @@ router = APIRouter()
 @router.post("/", response_model=User, tags=["users"])
 def create_user(body: CreateUser, session: Session = Depends(get_session)) -> User:
     hashed_password = body.password + "notreallyhashed"  # Replace with real hashing
-    user = User(email=body.email, hashed_password=hashed_password) # type: ignore
+    user = User(
+        email=body.email, 
+        username=body.username,  # Fixed: now includes username
+        hashed_password=hashed_password
+    )  # type: ignore
     session.add(user)
     session.commit()
     session.refresh(user)
