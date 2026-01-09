@@ -1,15 +1,16 @@
-version: "3.9"
+version: '3.8'
 
 services:
-  api:
-    build: .
-    container_name: caddiescan_back
+  postgres:
+    image: postgres:17
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: caddiescan
     ports:
-      - "8001:8000"
+      - "5432:5432"
     volumes:
-      - db_data:/app/db
-    restart: always
+      - postgres_data:/var/lib/postgresql/data
 
 volumes:
-  db_data:
-
+  postgres_data:
