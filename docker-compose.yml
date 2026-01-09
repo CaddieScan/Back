@@ -5,8 +5,11 @@ services:
     build: .
     container_name: caddiescan_back
     ports:
-      - "8000:8000"
+      - "8001:8000"
     volumes:
-      - ./api:/app/api
-      - ./db:/app/db
+      - db_data:/app/db
     restart: always
+
+volumes:
+  db_data:
+

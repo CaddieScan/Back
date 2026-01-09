@@ -1,0 +1,37 @@
+name: Deploy backend to Raspberry Pi (dev)
+
+on:
+  push:
+    branches:
+      - dev
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Deploy to Raspberry Pi over SSH
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          port: ${{ secrets.SSH_PORT }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            set -e
+            cd ${{ secrets.REMOTE_APP_DIR }}
+            echo "[Deploy] Updating Git repo on Raspberry Pi"
+            git fetch origin dev
+            git checkout dev
+            git pull origin dev
+
+            echo "[Deploy] Rebuilding and restarting Docker Compose stack"
+            docker compose pull || true
+            docker compose up -d --build api
+
+            echo "[Deploy] Current running containers:"
+            docker ps
+
