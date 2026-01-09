@@ -1,8 +1,9 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlmodel import Session, select
-from model import User
-from schema import CreateUser, UserRead
-from database import get_session
+
+from ..model import User
+from ..schema import CreateUser, UserRead
+from ..database import get_session
 from typing import List, Optional
 from passlib.context import CryptContext
 
