@@ -1,12 +1,13 @@
-from pathlib import Path
 from sqlmodel import create_engine, Session, SQLModel
 
-# Build sqlite path relative to this file to avoid cwd issues
-BASE_DIR = Path(__file__).resolve().parent
-sqlite_file_name = BASE_DIR.parent / "db" / "database.db"
-sqlite_url = f"sqlite:///{sqlite_file_name}"
-connect_args = {"check_same_thread": False}
-engine = create_engine(sqlite_url, connect_args=connect_args)
+POSTGRES_USER = "postgres"
+POSTGRES_PASSWORD = "postgres"
+POSTGRES_DB = "caddiescan"
+POSTGRES_HOST = "localhost"  
+POSTGRES_PORT = 5432
+
+postgres_url = f"postgresql://{POSTGRES_USER}:{POSTGRES_PASSWORD}@{POSTGRES_HOST}:{POSTGRES_PORT}/{POSTGRES_DB}"
+engine = create_engine(postgres_url, echo=True)
 
 
 def create_db_and_tables():

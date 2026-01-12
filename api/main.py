@@ -3,6 +3,8 @@ from contextlib import asynccontextmanager
 from fastapi.middleware.cors import CORSMiddleware
 from .database import create_db_and_tables, get_session
 from .routes.users import router as users_router
+from .routes.product import router as product_router
+
 
 
 from sqlmodel import Session, select
@@ -36,3 +38,4 @@ async def read_root():
     return {"message": "Hello, World!"}
 
 app.include_router(users_router, prefix="/users")
+app.include_router(product_router, prefix="/product")
