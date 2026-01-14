@@ -10,19 +10,11 @@ router = APIRouter(tags=["Products"])
 
 LOG = logging.getLogger(__name__)
 
-
-# 🔹 Schéma pour la requête (PAS une table)
-class ProductCreate(SQLModel):
-    code_barre: int
-    rayon_id: int
-    promotion_id: Optional[int] = None
-    libelle: str
-    image: Optional[int] = None
-    prix: float
+from api.model import Product
 
 
 @router.post("/product/")
-def create_product(body: ProductCreate, session: Session = Depends(get_session)):
+def create_product(body: Product, session: Session = Depends(get_session)):
     try:
         sql = text("""
         INSERT INTO produit (code_barre, rayon_id, promotion_id, libelle, image, prix)
@@ -44,10 +36,9 @@ def create_product(body: ProductCreate, session: Session = Depends(get_session))
 
         session.commit()
 
-        inserted_id = result.scalar_one()
 
         return {
-            "code_barre": inserted_id,
+            "code_barre": body.code_barre,
             "rayon_id": body.rayon_id,
             "promotion_id": body.promotion_id,
             "libelle": body.libelle,
@@ -63,19 +54,29 @@ def create_product(body: ProductCreate, session: Session = Depends(get_session))
         )
     
 
-@router.get("/get_product")
+from fastapi import APIRouter, Depends, HTTPException
+from sqlmodel import Session, SQLModel
+from sqlalchemy import text
+from ..database import get_session
+
+import logging
+LOG = logging.getLogger(__name__)
+
+
+@router.get("/get_product", response_model=Product)
 def get_product(barcode: int, session: Session = Depends(get_session)):
     try:
         sql = text("SELECT * FROM produit WHERE code_barre = :barcode")
-
         row = session.execute(sql, {"barcode": barcode}).first()
 
         if row is None:
             raise HTTPException(status_code=404, detail="Produit non trouvé")
 
-        LOG.info(f"Produit trouvé: {dict(row._mapping)}")
-        return dict(row._mapping)
+        product = Product(**row._mapping)
 
+        LOG.info(f"Produit trouvé: {product}")
+        return product
 
     except Exception as e:
+        LOG.error(f"Erreur récupération produit: {e}")
         raise HTTPException(status_code=500, detail=str(e))
