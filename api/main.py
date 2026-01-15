@@ -5,6 +5,7 @@ from .database import create_db_and_tables, get_session
 from .routes.users import router as users_router
 from .routes.product import router as product_router
 from .routes.carts import router as cart_router
+from .routes.shop import router as shop_router
 
 
 
@@ -41,3 +42,4 @@ async def read_root():
 app.include_router(users_router, prefix="/users")
 app.include_router(product_router, prefix="/product")
 app.include_router(cart_router, prefix="/cart")
+app.include_router(shop_router, prefix="/shop")
