@@ -1,3 +1,4 @@
+from cffi.backend_ctypes import long
 from pydantic import BaseModel, EmailStr, ConfigDict
 from datetime import datetime
 from typing import Optional
@@ -13,3 +14,12 @@ class UserRead(BaseModel):
     id: int
     email: EmailStr
     username: str
+
+class CreateCart(BaseModel):
+    user_id: int
+    shop_id: int
+
+class AddProductToCart(BaseModel):
+    cart_id: int
+    produit_id: long
+    quantity: int

@@ -4,7 +4,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from .database import create_db_and_tables, get_session
 from .routes.users import router as users_router
 from .routes.product import router as product_router
-from .routes.Carts import router as cart_router
+from .routes.carts import router as cart_router
 
 
 
