@@ -99,3 +99,21 @@ def get_product(barcode: int, session: Session = Depends(get_session)):
     except Exception as e:
         LOG.error(f"Erreur récupération produit: {e}")
         raise HTTPException(status_code=500, detail=str(e))
+
+@router.get("/get_products_by_shopid", response_model=list[Produit])
+def get_products_by_shopid(shop_id: int, session: Session = Depends(get_session)):
+    try:
+        sql = text("SELECT p.* FROM produit p JOIN scan_panier sp ON p.code_barre = sp.produit_id JOIN panier pa ON sp.panier_id = pa.id WHERE pa.magasin_id = :shop_id")
+        rows = session.execute(sql, {"shop_id": shop_id}).mappings().all()
+
+        if not rows:
+            raise HTTPException(status_code=404, detail="Produits non trouvés pour ce magasin")
+
+        products = [Produit(**row) for row in rows]
+
+        LOG.info(f"Produits trouvés: {products}")
+        return products
+
+    except Exception as e:
+        LOG.error(f"Erreur récupération produits: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
