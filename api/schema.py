@@ -23,3 +23,8 @@ class AddProductToCart(BaseModel):
     cart_id: int
     produit_id: long
     quantity: int
+
+class GetProximityShops(BaseModel):
+    latitude: float
+    longitude: float
+    radius_km: float = 50.0
