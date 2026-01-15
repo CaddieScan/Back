@@ -1,3 +1,4 @@
+from markdown_it.rules_block import table
 from sqlmodel import SQLModel, Field
 from typing import Optional
 from datetime import datetime, timedelta
@@ -16,7 +17,7 @@ class Shop(SQLModel, table=True):
     lat: float
     logo: str
 
-class Product(SQLModel, table=True):
+class Produit(SQLModel, table=True):
     code_barre: int = Field(default=None, primary_key=True)
     rayon_id: int
     promotion_id: Optional[int] = None
@@ -31,4 +32,3 @@ class Carts(SQLModel, table=True):
     barcode : int
     total_price : int
     creation_time : datetime = Field(default_factory=datetime.now)
-

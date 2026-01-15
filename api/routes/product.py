@@ -10,11 +10,11 @@ router = APIRouter(tags=["Products"])
 
 LOG = logging.getLogger(__name__)
 
-from api.model import Product
+from api.model import Produit
 
 
 @router.post("/product/")
-def create_product(body: Product, session: Session = Depends(get_session)):
+def create_product(body: Produit, session: Session = Depends(get_session)):
     try:
         sql = text("""
         INSERT INTO produit (code_barre, rayon_id, promotion_id, libelle, image, prix)
@@ -63,16 +63,16 @@ import logging
 LOG = logging.getLogger(__name__)
 
 
-@router.get("/get_product", response_model=Product)
+@router.get("/get_product", response_model=Produit)
 def get_product(barcode: int, session: Session = Depends(get_session)):
     try:
-        sql = text("SELECT * FROM produit ")
+        sql = text("SELECT * FROM produit")
         row = session.execute(sql)
 
         if row is None:
             raise HTTPException(status_code=404, detail="Produit non trouvé")
 
-        product = Product(**row._mapping)
+        product = Produit(**row._mapping)
 
         LOG.info(f"Produit trouvé: {product}")
         return product
@@ -82,7 +82,7 @@ def get_product(barcode: int, session: Session = Depends(get_session)):
         raise HTTPException(status_code=500, detail=str(e))
 
 
-@router.get("/get_product_by_barcode", response_model=Product)
+@router.get("/get_product_by_barcode", response_model=Produit)
 def get_product(barcode: int, session: Session = Depends(get_session)):
     try:
         sql = text("SELECT * FROM produit WHERE code_barre = :barcode")
@@ -91,7 +91,7 @@ def get_product(barcode: int, session: Session = Depends(get_session)):
         if row is None:
             raise HTTPException(status_code=404, detail="Produit non trouvé")
 
-        product = Product(**row)
+        product = Produit(**row)
 
         LOG.info(f"Produit trouvé: {product}")
         return product
