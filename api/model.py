@@ -22,7 +22,7 @@ class Produit(SQLModel, table=True):
     rayon_id: int
     promotion_id: Optional[int] = None
     libelle: str
-    image: Optional[String] = None
+    image: Optional[str] = None
     prix: float
 
 class Carts(SQLModel, table=True):
