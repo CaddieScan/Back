@@ -1,4 +1,3 @@
-from markdown_it.rules_block import table
 from sqlmodel import SQLModel, Field
 from typing import Optional
 from datetime import datetime, timedelta
@@ -13,9 +12,10 @@ class User(SQLModel, table=True):
 class Shop(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     libelle: str = Field(index=True, unique=True)
-    long: float
-    lat: float
-    logo: str
+    longitude: Optional[float] = None
+    latitude: Optional[float] = None
+    logo: Optional[str] = None
+    km: Optional[float] = None
 
 class Produit(SQLModel, table=True):
     code_barre: int = Field(default=None, primary_key=True)

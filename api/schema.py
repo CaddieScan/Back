@@ -1,4 +1,3 @@
-from cffi.backend_ctypes import long
 from pydantic import BaseModel, EmailStr, ConfigDict
 from datetime import datetime
 from typing import Optional
@@ -21,7 +20,7 @@ class CreateCart(BaseModel):
 
 class AddProductToCart(BaseModel):
     cart_id: int
-    produit_id: long
+    produit_id: int
     quantity: int
 
 class GetProximityShops(BaseModel):
