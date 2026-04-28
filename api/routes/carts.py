@@ -25,9 +25,9 @@ def add_product_to_cart(body: AddProductToCart, session: Session = Depends(get_s
         result = session.execute(
             sql,
             {
-                "panier_id": body.cart_id,
+                "panier_id": body.panier_id,
                 "produit_id": body.produit_id,
-                "quantite": body.quantity,
+                "quantite": body.quantite,
                 "date_heure_creation": datetime.now(),
             }
         )
@@ -38,9 +38,9 @@ def add_product_to_cart(body: AddProductToCart, session: Session = Depends(get_s
 
         return {
             "id": inserted_id,
-            "panier_id": body.cart_id,
+            "panier_id": body.panier_id,
             "produit_id": body.produit_id,
-            "quantite": body.quantity,
+            "quantite": body.quantite,
         }
 
     except Exception as e:
@@ -64,8 +64,8 @@ def create_cart(body: CreateCart, session: Session = Depends(get_session)):
         result = session.execute(
             sql,
             {
-                "utilisateur_id": body.user_id,
-                "magasin_id": body.shop_id,
+                "utilisateur_id": body.utilisateur_id,
+                "magasin_id": body.magasin_id,
                 "date_heure_creation": datetime.now(),
                 "code_barre": placeholder_code_barre,
                 "total_ttc": 0,
@@ -78,8 +78,8 @@ def create_cart(body: CreateCart, session: Session = Depends(get_session)):
 
         return {
             "id": inserted_id,
-            "utilisateur_id": body.user_id,
-            "magasin_id": body.shop_id,
+            "utilisateur_id": body.utilisateur_id,
+            "magasin_id": body.magasin_id,
             "date_heure_creation": datetime.now(),
         }
 

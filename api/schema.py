@@ -16,13 +16,13 @@ class UserRead(BaseModel):
     username: str
 
 class CreateCart(BaseModel):
-    user_id: int
-    shop_id: int
+    utilisateur_id: int
+    magasin_id: int
 
 class AddProductToCart(BaseModel):
-    cart_id: int
+    panier_id: int
     produit_id: long
-    quantity: int
+    quantite: int
 
 class GetProximityShops(BaseModel):
     latitude: float
