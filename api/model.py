@@ -1,4 +1,3 @@
-from markdown_it.rules_block import table
 from sqlmodel import SQLModel, Field
 from typing import Optional
 from datetime import datetime, timedelta
