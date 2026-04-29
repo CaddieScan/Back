@@ -16,6 +16,7 @@ class Shop(SQLModel, table=True):
     latitude: Optional[float] = None
     logo: Optional[str] = None
     km: Optional[float] = None
+    is_favorite: Optional[bool] = False
 
 class Produit(SQLModel, table=True):
     code_barre: int = Field(default=None, primary_key=True)
