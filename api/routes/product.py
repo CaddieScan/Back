@@ -80,17 +80,19 @@ LOG = logging.getLogger(__name__)
 @router.get("/get_product", response_model=Produit)
 def get_product(barcode: int, session: Session = Depends(get_session)):
     try:
-        sql = text("SELECT * FROM produit")
-        row = session.execute(sql)
+        sql = text("SELECT * FROM produit WHERE code_barre = :barcode")
+        row = session.execute(sql, {"barcode": barcode}).mappings().first()
 
         if row is None:
             raise HTTPException(status_code=404, detail="Produit non trouvé")
 
-        product = Produit(**row._mapping)
+        product = Produit(**row)
 
         LOG.info(f"Produit trouvé: {product}")
         return product
 
+    except HTTPException:
+        raise
     except Exception as e:
         LOG.error(f"Erreur récupération produit: {e}")
         raise HTTPException(status_code=500, detail=str(e))

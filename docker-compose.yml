@@ -1,6 +1,19 @@
 version: '3.8'
 
 services:
+  api:
+    build: .
+    depends_on:
+      - postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: caddiescan
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: 5432
+    ports:
+      - "8000:8000"
+
   postgres:
     image: postgres:17
     environment:

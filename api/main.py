@@ -10,12 +10,6 @@ from .routes.shop import router as shop_router
 from .routes.shop import api_router as shop_api_router
 from .routes.store_map import router as store_map_router
 
-
-
-from sqlmodel import Session, select
-
-
-
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     # --- STARTUP ---

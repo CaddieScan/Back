@@ -5,9 +5,9 @@ ENV PYTHONUNBUFFERED=1
 
 WORKDIR /app
 
-# Correction du nom du fichier requirements
-COPY requirement.txt .
-RUN pip install --no-cache-dir -r requirement.txt
+# Installer les dependances Python
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
 
 # Copier tout le code API
 COPY api ./api

@@ -7,7 +7,12 @@ POSTGRES_HOST = "localhost"
 POSTGRES_PORT = 5432
 
 postgres_url = f"postgresql://{POSTGRES_USER}:{POSTGRES_PASSWORD}@{POSTGRES_HOST}:{POSTGRES_PORT}/{POSTGRES_DB}"
-engine = create_engine(postgres_url, echo=True)
+engine = create_engine(
+    postgres_url,
+    echo=True,
+    pool_pre_ping=True,
+    pool_recycle=1800,
+)
 
 
 def create_db_and_tables():
