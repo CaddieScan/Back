@@ -5,13 +5,13 @@ from datetime import datetime, timedelta
 
 class User(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
-    email: str = Field(index=True, unique=True)
-    hashed_password: str
-    username: str = Field(index=True, unique=True)
+    email: Optional[str] = Field(index=True, unique=True)
+    hashed_password: Optional[str]
+    username: Optional[str] = Field(index=True, unique=True)
 
 class Shop(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
-    libelle: str = Field(index=True, unique=True)
+    libelle: Optional[str] = Field(index=True, unique=True)
     longitude: Optional[float] = None
     latitude: Optional[float] = None
     logo: Optional[str] = None
@@ -19,7 +19,7 @@ class Shop(SQLModel, table=True):
     is_favorite: Optional[bool] = False
 
 class Produit(SQLModel, table=True):
-    code_barre: int = Field(default=None, primary_key=True)
+    code_barre: Optional[int] = Field(default=None, primary_key=True)
     rayon_id: int
     promotion_id: Optional[int] = None
     libelle: str
