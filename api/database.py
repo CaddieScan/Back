@@ -6,7 +6,7 @@ POSTGRES_DB = "caddiescan"
 POSTGRES_HOST = "localhost"  
 POSTGRES_PORT = 5432
 
-postgres_url = f"postgresql://{POSTGRES_USER}:{POSTGRES_PASSWORD}@{POSTGRES_HOST}:{POSTGRES_PORT}/{POSTGRES_DB}"
+postgres_url = f"postgresql://neondb_owner:npg_prjD0ViwuL3n@ep-silent-band-al1g8emv-pooler.c-3.eu-central-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require"
 engine = create_engine(postgres_url, echo=True)
 
 
