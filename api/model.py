@@ -28,8 +28,8 @@ class Produit(SQLModel, table=True):
 
 class Carts(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
-    user_id : int
-    shop_id : int
-    barcode : int
-    total_price : int
-    creation_time : datetime = Field(default_factory=datetime.now)
+    user_id: int = Field()
+    shop_id: int = Field()
+    barcode: int = Field()
+    total_price: int = Field()
+    creation_time: datetime = Field(default_factory=datetime.now)
