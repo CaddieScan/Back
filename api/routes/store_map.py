@@ -33,7 +33,7 @@ def get_store_map(store_id: int, session: Session = Depends(get_session)):
     return map_data_to_payload(row["donnees"])
 
 
-@router.get("/stores/{store_id}/map/mobile", response_model=list[Rayon])
+@router.get("/stores/{store_id}/map/mobile", response_model=StoreMapPayload)
 def get_store_map(store_id: int, session: Session = Depends(get_session)):
     # Vérifie que le magasin existe si nécessaire
     # get_store_row_or_404(store_id, session)
