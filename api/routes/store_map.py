@@ -22,21 +22,28 @@ router = APIRouter(prefix="/api", tags=["Cartes magasin"])
 
 @router.get("/stores/{store_id}/map", response_model=list[Rayon])
 def get_store_map(store_id: int, session: Session = Depends(get_session)):
-    get_store_row_or_404(store_id, session)
+    # Teste en commentant cette ligne pour voir si c'est elle qui bloque
+    # get_store_row_or_404(store_id, session)
 
     ensure_carte_magasin_donnee_table(session)
 
-    result = session.execute(
+    rows = session.execute(
         text("SELECT * FROM rayon WHERE magasin_id = :store_id"),
         {"store_id": store_id},
     ).mappings().all()
 
-    if not result:
+    if not rows:
         return []
 
-    rayons = [Rayon(**r) for r in result]
+    rayons = []
+    for r in rows:
+        try:
+            rayon = Rayon(**r)
+            rayons.append(rayon)
+        except Exception as e:
+            LOG.error(f"Erreur de validation pour un rayon : {e}")
 
-    LOG.info(f"Magasins (rayons) trouvés: {len(rayons)}")
+    LOG.info(f"Nombre de rayons renvoyés : {len(rayons)}")
     return rayons
 
 
