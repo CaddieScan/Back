@@ -43,3 +43,10 @@ class Rayon(SQLModel, table=True):
     point1_y: float = Field()
     point2_x: float = Field()
     point2_y: float = Field()
+
+
+class CarteFidelite(SQLModel, table=True):
+    id: Optional[int] = Field(default=None, primary_key=True)
+    utilisateur_id: int = Field()
+    magasin_id: int = Field()
+    code_barre: int = Field()
