@@ -49,7 +49,7 @@ def get_store_map(store_id: int, session: Session = Depends(get_session)):
     results = [json.loads(r.json()) if hasattr(r, 'json') else dict(r) for r in rayons]
 
     LOG.info(f"Envoi forcé de {len(results)} éléments")
-    return JSONResponse(content=results)
+    return rows
 
 
 @router.put("/stores/{store_id}/map", response_model=StoreMapPayload)
