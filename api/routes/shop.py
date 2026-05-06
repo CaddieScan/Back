@@ -57,29 +57,42 @@ def get_shops(session: Session = Depends(get_session)):
         LOG.error(f"Erreur récupération magasins: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
-# mettre en favori un magasin
+
+
 @router.post("/favorite")
 def set_favorite(body: SetFavoriteShop, session: Session = Depends(get_session)):
     print("SHOP ID :", body.shop_id)
     try:
-
-        user_id = 1
-
-        # Insertion dans la table de liaison (ajustez le nom de la table et des colonnes si besoin)
-        sql_insert = text("""
-            INSERT INTO magasin_favori (utilisateur_id, magasin_id) 
-            VALUES (1, 1)
+        # on vérifie si le favori existe déjà
+        sql_check = text("""
+            SELECT id FROM magasin_favori 
+            WHERE utilisateur_id = :utilisateur_id AND magasin_id = :magasin_id
         """)
-        session.execute(sql_insert, {"utilisateur_id": 1, "magasin_id": body.shop_id})
-        session.commit()
+        result = session.execute(sql_check, {"utilisateur_id": 1, "magasin_id": body.shop_id}).fetchone()
 
-        return {"message": "Magasin ajouté aux favoris avec succès."}
+        if result:
+            # le favori existe, on le supprime
+            sql_delete = text("""
+                DELETE FROM magasin_favori 
+                WHERE utilisateur_id = :utilisateur_id AND magasin_id = :magasin_id
+            """)
+            session.execute(sql_delete, {"utilisateur_id": 1, "magasin_id": body.shop_id})
+            session.commit()
+            return {"message": "Magasin retiré des favoris.", "action": "removed"}
+        else:
+            # le favori n'existe pas, on l'ajoute
+            sql_insert = text("""
+                INSERT INTO magasin_favori (utilisateur_id, magasin_id) 
+                VALUES (:utilisateur_id, :magasin_id)
+            """)
+            session.execute(sql_insert, {"utilisateur_id": 1, "magasin_id": body.shop_id})
+            session.commit()
+            return {"message": "Magasin ajouté aux favoris.", "action": "added"}
 
     except Exception as e:
         session.rollback()
-        LOG.error(f"Erreur ajout favori magasin: {e}")
+        LOG.error(f"Erreur toggle favori magasin: {e}")
         raise HTTPException(status_code=500, detail=str(e))
-
 @api_router.get("/stores", response_model=list[StoreRead])
 def list_api_stores(session: Session = Depends(get_session)):
     rows = session.execute(
