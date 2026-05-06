@@ -9,6 +9,7 @@ from .routes.carts import router as cart_router
 from .routes.shop import router as shop_router
 from .routes.shop import api_router as shop_api_router
 from .routes.store_map import router as store_map_router
+from .routes.carte_fidelite import router as carte_fidelite_router
 
 
 
@@ -49,3 +50,5 @@ app.include_router(shop_router, prefix="/shop")
 app.include_router(shop_api_router)
 app.include_router(product_api_router)
 app.include_router(store_map_router)
+
+app.include_router(carte_fidelite_router, prefix="/carte_fidelite")

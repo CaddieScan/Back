@@ -27,3 +27,15 @@ class GetProximityShops(BaseModel):
     latitude: float
     longitude: float
     radius_km: float = 50.0
+
+class CreateCarteFidelite(BaseModel):
+    utilisateur_id: int
+    magasin_id: int
+    code_barre: int
+
+class CarteFideliteRead(BaseModel):
+    id: int
+    utilisateur_id: int
+    magasin_id: int
+    code_barre: int
+    magasin_libelle: str

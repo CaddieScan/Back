@@ -438,7 +438,7 @@ def get_proximity_shops(body: GetProximityShops, user_id: int = 1, session: Sess
             return cached_result
 
     try:
-        # requête qui trouve les magasins dans un rayon donné et calcule la distance en km
+        # calcul distance approx entre deux coords (lat/lon) via distance euclidienne, conversion degres -> km (1 deg ≈ 111 km), filtrage avec radius converti en degres, + verif si magasin en favori
         sql = text("""
             SELECT *, 
                    (sqrt(power(latitude - :latitude, 2) + power(longitude - :longitude, 2)) * 111.0) AS km,
