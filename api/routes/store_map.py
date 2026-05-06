@@ -2,8 +2,10 @@ from fastapi import APIRouter, Depends, status, HTTPException
 from sqlalchemy import text
 import logging
 from sqlmodel import Session
+
 LOG = logging.getLogger(__name__)
 
+from api.model import Rayon
 from ..database import get_session
 from .web_common import (
     StoreMapPayload,
@@ -18,29 +20,26 @@ from .web_common import (
 router = APIRouter(prefix="/api", tags=["Cartes magasin"])
 
 
-@router.get("/stores/{store_id}/map", response_model=StoreMapPayload)
+@router.get("/stores/{store_id}/map", response_model=list[Rayon])
 def get_store_map(store_id: int, session: Session = Depends(get_session)):
     get_store_row_or_404(store_id, session)
     ensure_carte_magasin_donnee_table(session)
     row = session.execute(
         text("SELECT * FROM rayon WHERE magasin_id = :store_id"),
         {"store_id": store_id},
-    ).mappings().first()
+    ).mappings().all()
     if row is None:
         raise HTTPException(status_code=404, detail="Rayon non trouvé")
 
-    shops = []
+    rayons = []
 
     for r in row:
         LOG.info(f"Row: {r}")
-        shop = Rayon(**r._mapping)
-        shops.append(shop)
-    LOG.info(f"Magasins trouvés: {shops}")
-        return shops
+        rayon = Rayon(**r)
+        rayons.append(rayon)
+    LOG.info(f"Magasins trouvés: {rayons}")
+    return rayons
 
-    except Exception as e:
-        LOG.error(f"Erreur récupération magasins: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
 
 
 @router.put("/stores/{store_id}/map", response_model=StoreMapPayload)

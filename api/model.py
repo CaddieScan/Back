@@ -36,8 +36,10 @@ class Carts(SQLModel, table=True):
 
 class Rayon(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
-    user_id: int = Field()
-    shop_id: int = Field()
-    barcode: int = Field()
-    total_price: int = Field()
-    creation_time: datetime = Field(default_factory=datetime.now)
+    magasin_id: int = Field()
+    etage_id: int = Field()
+    libelle: str = Field()
+    point1_x: float = Field()
+    point1_y: float = Field()
+    point2_x: float = Field()
+    point2_y: float = Field()
