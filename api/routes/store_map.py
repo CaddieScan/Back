@@ -23,21 +23,20 @@ router = APIRouter(prefix="/api", tags=["Cartes magasin"])
 @router.get("/stores/{store_id}/map", response_model=list[Rayon])
 def get_store_map(store_id: int, session: Session = Depends(get_session)):
     get_store_row_or_404(store_id, session)
+
     ensure_carte_magasin_donnee_table(session)
-    row = session.execute(
+
+    result = session.execute(
         text("SELECT * FROM rayon WHERE magasin_id = :store_id"),
         {"store_id": store_id},
     ).mappings().all()
-    if row is None:
-        raise HTTPException(status_code=404, detail="Rayon non trouvé")
 
-    rayons = []
+    if not result:
+        return []
 
-    for r in row:
-        LOG.info(f"Row: {r}")
-        rayon = Rayon(**r)
-        rayons.append(rayon)
-    LOG.info(f"Magasins trouvés: {rayons}")
+    rayons = [Rayon(**r) for r in result]
+
+    LOG.info(f"Magasins (rayons) trouvés: {len(rayons)}")
     return rayons
 
 
