@@ -24,7 +24,7 @@ router = APIRouter(prefix="/api", tags=["Cartes magasin"])
 
 @router.get("/stores/{store_id}/map", response_model=list[Rayon])
 def get_store_map(store_id: int, session: Session = Depends(get_session)):
-    # Teste en commentant cette ligne pour voir si c'est elle qui bloque
+    # Vérifie que le magasin existe si nécessaire
     # get_store_row_or_404(store_id, session)
 
     ensure_carte_magasin_donnee_table(session)
@@ -34,22 +34,24 @@ def get_store_map(store_id: int, session: Session = Depends(get_session)):
         {"store_id": store_id},
     ).mappings().all()
 
+    LOG.info(f"Rayons bruts récupérés pour magasin_id={store_id} : {len(rows)}")
+
     if not rows:
         return []
 
     rayons = []
+
     for r in rows:
         try:
-            rayon = Rayon(**r)
+            rayon = Rayon(**dict(r))
             rayons.append(rayon)
         except Exception as e:
             LOG.error(f"Erreur de validation pour un rayon : {e}")
+            LOG.error(f"Ligne problématique : {dict(r)}")
 
     LOG.info(f"Nombre de rayons renvoyés : {len(rayons)}")
-    results = [json.loads(r.json()) if hasattr(r, 'json') else dict(r) for r in rayons]
 
-    LOG.info(f"Envoi forcé de {len(results)} éléments")
-    return rows
+    return rayons
 
 
 @router.put("/stores/{store_id}/map", response_model=StoreMapPayload)
