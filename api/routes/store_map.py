@@ -1,7 +1,9 @@
 from fastapi import APIRouter, Depends, status, HTTPException
+from pydantic import json
 from sqlalchemy import text
 import logging
 from sqlmodel import Session
+from starlette.responses import JSONResponse
 
 LOG = logging.getLogger(__name__)
 
@@ -44,8 +46,10 @@ def get_store_map(store_id: int, session: Session = Depends(get_session)):
             LOG.error(f"Erreur de validation pour un rayon : {e}")
 
     LOG.info(f"Nombre de rayons renvoyés : {len(rayons)}")
-    return rayons
+    results = [json.loads(r.json()) if hasattr(r, 'json') else dict(r) for r in rayons]
 
+    LOG.info(f"Envoi forcé de {len(results)} éléments")
+    return JSONResponse(content=results)
 
 
 @router.put("/stores/{store_id}/map", response_model=StoreMapPayload)
