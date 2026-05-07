@@ -11,6 +11,7 @@ LOG = logging.getLogger(__name__)
 
 router = APIRouter()
 
+#test
 
 # on crée une carte de fidélité
 @router.post("/", response_model=CarteFidelite, tags=["carte_fidelite"])
