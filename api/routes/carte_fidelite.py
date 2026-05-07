@@ -40,3 +40,20 @@ def get_cartes_by_user(utilisateur_id: int, session: Session = Depends(get_sessi
     except Exception as e:
         LOG.error(f"Erreur récupération cartes: {e}")
         raise HTTPException(status_code=500, detail=str(e))
+
+
+# on récupère la carte de fidélité d'un utilisateur pour un magasin donné
+@router.get("/user/{utilisateur_id}/magasin/{magasin_id}", response_model=CarteFideliteRead, tags=["carte_fidelite"])
+def get_carte_by_user_and_magasin(utilisateur_id: int, magasin_id: int, session: Session = Depends(get_session)):
+    try:
+        sql = text(
+            "SELECT cf.*, m.libelle as magasin_libelle FROM carte_fidelite cf JOIN magasin m ON m.id = cf.magasin_id WHERE cf.utilisateur_id = :utilisateur_id AND cf.magasin_id = :magasin_id LIMIT 1")
+        row = session.execute(sql, {"utilisateur_id": utilisateur_id, "magasin_id": magasin_id}).mappings().first()
+
+        if not row:
+            raise HTTPException(status_code=404, detail="Aucune carte trouvée pour cet utilisateur et ce magasin")
+
+        return CarteFideliteRead(**row)
+    except Exception as e:
+        LOG.error(f"Erreur récupération carte: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
